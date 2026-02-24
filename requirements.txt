@@ -1,0 +1,17 @@
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+numpy==1.26.4
+opencv-python==4.11.0.86
+pillow 
+plyfile 
+huggingface_hub 
+safetensors 
+hydra-core 
+accelerate 
+rich 
+pandas 
+transformers 
+flow-vis 
+h5py
+trimesh==4.7.1
