@@ -18,7 +18,7 @@
 <div align="center">
 	<a href="https://arxiv.org/abs/2602.20157"><img src="https://img.shields.io/badge/arXiv-2512.10950-b31b1b" alt="arXiv"></a>
 	<a href="https://flow3r-project.github.io/"><img src="https://img.shields.io/badge/Project_Page-green" alt="Project Page"></a>
-	<!-- <a href=""><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue'></a> -->
+	<a href="https://huggingface.co/spaces/Clara211111/flow3r"><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue'></a>
 </div>
 
 <div align="center">

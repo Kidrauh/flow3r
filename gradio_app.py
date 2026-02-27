@@ -23,13 +23,17 @@ from flow3r.utils.basic import load_images_as_tensor
 from flow3r.utils.geometry import depth_edge
 
 from scipy.spatial.transform import Rotation
+from huggingface_hub import hf_hub_download
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 print("Initializing and loading Flow3r model...")
 
 model = Flow3r()
-ckpt_path = "./checkpoints/flow3r.bin"
+# Option1: download from google drive
+# ckpt_path = "./checkpoints/flow3r.bin"
+# Option2: download from huggingface
+ckpt_path = hf_hub_download(repo_id="Clara211111/flow3r", filename="flow3r.bin")
 checkpoint = torch.load(ckpt_path, weights_only=False, map_location='cpu')
 model.load_state_dict(checkpoint, strict=True)
 
@@ -417,7 +421,6 @@ def gradio_demo(
     conf_thres=3.0,
     frame_filter="All",
     show_cam=True,
-    mask_sky=False,
 ):
     """
     Perform reconstruction using the already-created target_dir/images.
@@ -493,7 +496,7 @@ def update_log():
 
 
 def update_visualization(
-    target_dir, conf_thres, frame_filter, show_cam, mask_sky, is_example
+    target_dir, conf_thres, frame_filter, show_cam, is_example
 ):
     """
     Reload saved predictions from npz, create (or reuse) the GLB for new parameters,
@@ -611,8 +614,8 @@ with gr.Blocks(
         """
     <h1>Flow3r: Factored Flow Prediction for Visual Geometry Learning</h1>
     <p>
-    <a href="https://github.com/facebookresearch/vggt">🐙 GitHub Repository</a> |
-    <a href="#">Project Page</a>
+    <a href="https://github.com/Kidrauh/flow3r">GitHub Repository</a> |
+    <a href="https://flow3r-project.github.io/">Project Page</a>
     </p>
 
     <div style="font-size: 16px; line-height: 1.5;">
@@ -654,11 +657,10 @@ with gr.Blocks(
                 )
 
             with gr.Row():
-                conf_thres = gr.Slider(minimum=0, maximum=100, value=50, step=0.1, label="Confidence Threshold (%)")
+                conf_thres = gr.Slider(minimum=0, maximum=100, value=0, step=0.1, label="Confidence Threshold (%)")
                 frame_filter = gr.Dropdown(choices=["All"], value="All", label="Show Points from Frame")
                 with gr.Column():
                     show_cam = gr.Checkbox(label="Show Camera", value=True)
-                    mask_sky = gr.Checkbox(label="Filter Sky", value=False)
 
     
     submit_btn.click(fn=clear_fields, inputs=[], outputs=[reconstruction_output]).then(
@@ -670,7 +672,6 @@ with gr.Blocks(
             conf_thres,
             frame_filter,
             show_cam,
-            mask_sky,
         ],
         outputs=[reconstruction_output, log_output, frame_filter],
     ).then(
@@ -687,7 +688,6 @@ with gr.Blocks(
             conf_thres,
             frame_filter,
             show_cam,
-            mask_sky,
             is_example,
         ],
         [reconstruction_output, log_output],
@@ -699,7 +699,6 @@ with gr.Blocks(
             conf_thres,
             frame_filter,
             show_cam,
-            mask_sky,
             is_example,
         ],
         [reconstruction_output, log_output],
@@ -712,19 +711,6 @@ with gr.Blocks(
             conf_thres,
             frame_filter,
             show_cam,
-            mask_sky,
-            is_example,
-        ],
-        [reconstruction_output, log_output],
-    )
-    mask_sky.change(
-        update_visualization,
-        [
-            target_dir_output,
-            conf_thres,
-            frame_filter,
-            show_cam,
-            mask_sky,
             is_example,
         ],
         [reconstruction_output, log_output],
